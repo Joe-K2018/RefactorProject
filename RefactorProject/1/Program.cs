@@ -7,11 +7,11 @@ using System.Threading.Tasks;
 
 namespace RefactorProject
 {
-    class Program
+    class ProgramOld1
     {
         static string Path = @"C:\Users\jkoch\Documents\Development_Practice\";
 
-        static void Main(string[] args)
+        static void MainOld1(string[] args)
         {
             //crud operations
             //create, read, update, delete
