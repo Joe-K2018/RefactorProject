@@ -7,17 +7,19 @@ using System.Threading.Tasks;
 
 namespace RefactorProject
 {
-    class ProgramOld02
+    class Program
     {
+        public enum PromptType { Create, Read, Write, Delete, Close }
+
         static string Path = @"C:\Users\jkoch\Documents\Development_Practice\";
         static string FileName = "Practice";
         static string FileExtension = ".txt";
         static string FullFilePath = $"{Path}{FileName}{FileExtension}";
         static string NameOfPerson = "Joe Koch";
 
-        static void MainOld02(string[] args)
+        static void Main(string[] args)
         {
-            var program = new ProgramOld02();
+            var program = new Program();
 
             // Create file
             program.ConsolePrompt(PromptType.Create);
@@ -43,26 +45,28 @@ namespace RefactorProject
             program.ConsolePrompt(PromptType.Delete);
             program.Delete(FullFilePath, true);
 
-            //Close ProgramOld02
+            //Close Program
             program.ConsolePrompt(PromptType.Close);
         }
-        public enum PromptType { Create, Read, Write, Delete, Close }
+
         public void ConsolePrompt(PromptType promptType)
         {
+            var promptText = "Press any key to ";
+
             if (promptType == PromptType.Create)
-                Console.WriteLine("Press any key to create file");
+                Console.WriteLine($"{promptText}create file");
 
             if (promptType == PromptType.Read)
-                Console.WriteLine("Press any key to read file");
+                Console.WriteLine($"{promptText}read file");
 
             if (promptType == PromptType.Write)
-                Console.WriteLine("Press any key to write text");
+                Console.WriteLine($"{promptText}write text");
 
             if (promptType == PromptType.Delete)
-                Console.WriteLine("Press any key to delete file");
+                Console.WriteLine($"{promptText}delete file");
 
             if (promptType == PromptType.Close)
-                Console.WriteLine("Press any key to close program");
+                Console.WriteLine($"{promptText}close program");
 
             Console.ReadKey();
         }
