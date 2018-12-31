@@ -1,13 +1,10 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.ComponentModel;
 using System.IO;
 using System.Linq;
 using System.Reflection;
-using System.Text;
-using System.Threading.Tasks;
 
-namespace RefactorProjectOld05
+namespace RefactorProject
 {
     public static class Extensions
     {
@@ -51,37 +48,37 @@ namespace RefactorProjectOld05
         static string Path = @"C:\Users\jkoch\Documents\Development_Practice\";
         static string FileName = "Practice";
         static string FileExtension = ".txt";
-        static string FullFilePath = $"{Path}{FileName}{FileExtension}";
+        static FileInfo FullFilePath = new FileInfo($"{Path}{FileName}{FileExtension}");
         static string NameOfPerson = "Joe Koch";
         static string PromptText = $"Press any key to ";
 
-        static void MainOld05(string[] args)
+        static void Main(string[] args)
         {
             var program = new Program();
 
             // Create file
             program.ConsolePrompt(PromptType.Create);
-            program.Create(FullFilePath, true);
+            program.Create(FullFilePath);
 
             //Write name to file
             program.ConsolePrompt(PromptType.Write);
-            program.Write(FullFilePath, NameOfPerson, true);
+            program.Write(FullFilePath, NameOfPerson);
 
             //read: file, print content to console
             program.ConsolePrompt(PromptType.Read);
-            string readText = program.Read(FullFilePath, true);
+            string readText = program.Read(FullFilePath);
 
             //update: append date time on new line
             program.ConsolePrompt(PromptType.Write);
-            program.WriteDateTime(FullFilePath, true);
+            program.WriteDateTime(FullFilePath);
 
             //read: file, print content
             program.ConsolePrompt(PromptType.Read);
-            readText = program.Read(FullFilePath, true);
+            readText = program.Read(FullFilePath);
 
             //Delete file
             program.ConsolePrompt(PromptType.Delete);
-            program.Delete(FullFilePath, true);
+            program.Delete(FullFilePath);
 
             //Close Program
             program.ConsolePrompt(PromptType.Close);
@@ -93,48 +90,48 @@ namespace RefactorProjectOld05
             Console.ReadKey();
         }
 
-        public void Create(string fullFilePath, bool writeToConsole = false)
+        public void Create(FileInfo fullFilePath, bool writeToConsole = true)
         {
             if (writeToConsole)
                 Console.WriteLine($"Creating file: {fullFilePath}");
 
-            var newFile = File.Create(fullFilePath);
+            var newFile = File.Create(fullFilePath.ToString());
             newFile.Close();
         }
-        public void Write(string fullFilePath, string text, bool writeToConsole = false)
+        public void Write(FileInfo fullFilePath, string text, bool writeToConsole = true)
         {
             if (writeToConsole)
                 Console.WriteLine($"Writing to file: \"{text}\"");
 
-            using (var writer = new StreamWriter(fullFilePath, true))
+            using (var writer = new StreamWriter(fullFilePath.ToString(), true))
             {
                 writer.WriteLine(text);
             }
         }
 
-        public string Read(string fullFilePath, bool writeToConsole = false)
+        public string Read(FileInfo fullFilePath, bool writeToConsole = true)
         {
-            string readText = File.ReadAllText(fullFilePath);
+            string readText = File.ReadAllText(fullFilePath.ToString());
             if (writeToConsole)
                 Console.WriteLine(readText);
 
             return readText;
         }
 
-        public void Delete(string fullFilePath, bool writeToConsole = false)
+        public void Delete(FileInfo fullFilePath, bool writeToConsole = true)
         {
             if (writeToConsole)
                 Console.WriteLine($"Deleting {fullFilePath}");
 
-            File.Delete(FullFilePath);
+            File.Delete(FullFilePath.ToString());
         }
 
-        public void WriteDateTime(string fullFilePath, bool writeToConsole = false)
+        public void WriteDateTime(FileInfo fullFilePath, bool writeToConsole = true)
         {
             if (writeToConsole)
                 Console.WriteLine("Writing DateTime");
 
-            using (var writer = new StreamWriter(fullFilePath, true))
+            using (var writer = new StreamWriter(fullFilePath.ToString(), true))
             {
                 var currentDateTime = DateTime.Now;
                 writer.WriteLine(currentDateTime);
