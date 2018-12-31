@@ -7,7 +7,7 @@ using System.Threading.Tasks;
 
 namespace RefactorProject
 {
-    class ProgramOld1
+    class ProgramOld01
     {
         static string Path = @"C:\Users\jkoch\Documents\Development_Practice\";
 
@@ -65,7 +65,7 @@ namespace RefactorProject
             Console.WriteLine("Deleting file");
             File.Delete(fullFilePath);
 
-            //Close Program
+            //Close ProgramOld03
             Console.WriteLine("Press any key to close");
             Console.ReadKey();
         }

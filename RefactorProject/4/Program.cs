@@ -7,19 +7,43 @@ using System.Threading.Tasks;
 
 namespace RefactorProject
 {
-    class ProgramOld03
+    public static class Extensions
     {
-        public enum PromptType { Create, Read, Write, Delete, Close }
+        public static string Action(this PromptType promptType)
+        {
+            if (promptType == PromptType.Create)
+                return "create file";
 
+            if (promptType == PromptType.Read)
+                return "read file";
+
+            if (promptType == PromptType.Write)
+                return "write text";
+
+            if (promptType == PromptType.Delete)
+                return "delete file";
+
+            if (promptType == PromptType.Close)
+                return "close program";
+
+            return "";
+        }
+    }
+
+    public enum PromptType { Create, Read, Write, Delete, Close };
+
+    class Program
+    {
         static string Path = @"C:\Users\jkoch\Documents\Development_Practice\";
         static string FileName = "Practice";
         static string FileExtension = ".txt";
         static string FullFilePath = $"{Path}{FileName}{FileExtension}";
         static string NameOfPerson = "Joe Koch";
+        static string PromptText = $"Press any key to ";
 
-        static void MainOld03(string[] args)
+        static void Main(string[] args)
         {
-            var program = new ProgramOld03();
+            var program = new Program();
 
             // Create file
             program.ConsolePrompt(PromptType.Create);
@@ -45,35 +69,13 @@ namespace RefactorProject
             program.ConsolePrompt(PromptType.Delete);
             program.Delete(FullFilePath, true);
 
-            //Close ProgramOld03
+            //Close Program
             program.ConsolePrompt(PromptType.Close);
         }
 
         public void ConsolePrompt(PromptType promptType)
         {
-            var promptText = "Press any key to ";
-
-            if (promptType == PromptType.Create)
-            {
-                Console.WriteLine($"{promptText}create file");
-            }
-            else if (promptType == PromptType.Read)
-            {
-                Console.WriteLine($"{promptText}read file");
-            }
-            else if (promptType == PromptType.Write)
-            {
-                Console.WriteLine($"{promptText}write text");
-            }
-            else if (promptType == PromptType.Delete)
-            {
-                Console.WriteLine($"{promptText}delete file");
-            }
-            else if (promptType == PromptType.Close)
-            {
-                Console.WriteLine($"{promptText}close program");
-            }
-
+            Console.WriteLine($"{PromptText}{promptType.Action()}");
             Console.ReadKey();
         }
 
