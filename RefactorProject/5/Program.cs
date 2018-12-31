@@ -1,36 +1,50 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.ComponentModel;
 using System.IO;
 using System.Linq;
+using System.Reflection;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace RefactorProjectOld04
+namespace RefactorProject
 {
     public static class Extensions
     {
-        public static string Action(this PromptType promptType)
+        public static string GetDescription<T>(this T GenericEnum)
         {
-            if (promptType == PromptType.Create)
-                return "create file";
-
-            if (promptType == PromptType.Read)
-                return "read file";
-
-            if (promptType == PromptType.Write)
-                return "write text";
-
-            if (promptType == PromptType.Delete)
-                return "delete file";
-
-            if (promptType == PromptType.Close)
-                return "close program";
-
-            return "";
+            Type genericEnumType = GenericEnum.GetType();
+            MemberInfo[] memberInfo = genericEnumType.GetMember(GenericEnum.ToString());
+            if ((memberInfo != null && memberInfo.Length > 0))
+            {
+                var _Attribs = memberInfo[0].GetCustomAttributes(typeof(DescriptionAttribute), false);
+                if ((_Attribs != null && _Attribs.Count() > 0))
+                {
+                    return ((DescriptionAttribute)_Attribs.ElementAt(0)).Description;
+                }
+            }
+            return genericEnumType.ToString();
         }
     }
 
-    public enum PromptType { Create, Read, Write, Delete, Close };
+    public enum PromptType
+    {
+        [Description("Create file")]
+        Create,
+
+        [Description("Read file")]
+        Read,
+
+        [Description("Write text")]
+        Write,
+
+        [Description("Delete file")]
+        Delete,
+
+        [Description("Close program")]
+        Close
+
+    }
 
     class Program
     {
@@ -41,7 +55,7 @@ namespace RefactorProjectOld04
         static string NameOfPerson = "Joe Koch";
         static string PromptText = $"Press any key to ";
 
-        static void MainOld04(string[] args)
+        static void Main(string[] args)
         {
             var program = new Program();
 
@@ -75,7 +89,7 @@ namespace RefactorProjectOld04
 
         public void ConsolePrompt(PromptType promptType)
         {
-            Console.WriteLine($"{PromptText}{promptType.Action()}");
+            Console.WriteLine($"Press any key to {promptType.GetDescription()}");
             Console.ReadKey();
         }
 
