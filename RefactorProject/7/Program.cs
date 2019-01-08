@@ -46,7 +46,7 @@ namespace RefactorProject
 
     class Program
     {
-        static string Path = @"C:\Users\jkoch\Documents\Development_Practic\";
+        static string Path = @"C:\Users\jkoch\Documents\Development_Practice\";
         static string FileName = "Practice";
         static string FileExtension = ".txt";
         static FileInfo FullFilePath = new FileInfo($"{Path}{FileName}{FileExtension}");
