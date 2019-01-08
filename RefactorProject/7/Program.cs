@@ -3,8 +3,9 @@ using System.ComponentModel;
 using System.IO;
 using System.Linq;
 using System.Reflection;
+using System.Text;
 
-namespace RefactorProjectOld06
+namespace RefactorProject
 {
     public static class Extensions
     {
@@ -45,14 +46,14 @@ namespace RefactorProjectOld06
 
     class Program
     {
-        static string Path = @"C:\Users\jkoch\Documents\Development_Practice\";
+        static string Path = @"C:\Users\jkoch\Documents\Development_Practic\";
         static string FileName = "Practice";
         static string FileExtension = ".txt";
         static FileInfo FullFilePath = new FileInfo($"{Path}{FileName}{FileExtension}");
         static string NameOfPerson = "Joe Koch";
         static string PromptText = $"Press any key to ";
 
-        static void MainOld6(string[] args)
+        static void Main(string[] args)
         {
             var program = new Program();
 
@@ -95,27 +96,73 @@ namespace RefactorProjectOld06
             if (writeToConsole)
                 Console.WriteLine($"Creating file: {fullFilePath}");
 
-            var newFile = File.Create(fullFilePath.ToString());
-            newFile.Close();
+            try
+            {
+                var newFile = fullFilePath.Create();
+                newFile.Close();
+            }
+            catch (System.IO.DirectoryNotFoundException ex)
+            {
+                Console.WriteLine("Create file failed");
+                Console.WriteLine(ex.Message);
+            }
         }
+
         public void Write(FileInfo fullFilePath, string text, bool writeToConsole = true)
         {
+            if (!fullFilePath.Exists)
+            {
+                Console.WriteLine("File does not exist");
+                return;
+            }
+
             if (writeToConsole)
                 Console.WriteLine($"Writing to file: \"{text}\"");
 
-            using (var writer = new StreamWriter(fullFilePath.ToString(), true))
+            try
             {
-                writer.WriteLine(text);
+                using (var writer = new StreamWriter(fullFilePath.ToString(), true))
+                {
+                    writer.WriteLine(text);
+                }
             }
+            catch (IOException ex)
+            {
+                Console.WriteLine("Write to file failed");
+                Console.WriteLine(ex);
+            }            
         }
 
         public string Read(FileInfo fullFilePath, bool writeToConsole = true)
         {
-            string readText = File.ReadAllText(fullFilePath.ToString());
-            if (writeToConsole)
-                Console.WriteLine(readText);
+            try
+            {
+                using (var stream = fullFilePath.OpenRead())
+                {
+                    var length = (int)stream.Length;
+                    var buffer = new byte[length];
+                    int count;
+                    var sum = 0;
+                    while ((count = stream.Read(buffer, sum, length - sum)) > 0) 
+                    {
+                        sum += count;
+                    }
 
-            return readText;
+                    var encode = new UTF8Encoding(true);
+                    var readText = encode.GetString(buffer);
+
+                    if (writeToConsole)
+                        Console.WriteLine(readText);
+
+                    return readText;
+                }
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine("File read failed");
+                Console.WriteLine(ex.Message);
+                return null;
+            }
         }
 
         public void Delete(FileInfo fullFilePath, bool writeToConsole = true)
@@ -123,15 +170,29 @@ namespace RefactorProjectOld06
             if (writeToConsole)
                 Console.WriteLine($"Deleting {fullFilePath}");
 
-            File.Delete(FullFilePath.ToString());
+            try
+            {
+                fullFilePath.Delete();
+            }
+            catch (System.IO.DirectoryNotFoundException ex)
+            {
+                Console.WriteLine("Delete file failed");
+                Console.WriteLine(ex.Message);
+            }
         }
 
         public void WriteDateTime(FileInfo fullFilePath, bool writeToConsole = true)
         {
+            if (!fullFilePath.Exists)
+            {
+                Console.WriteLine("File does not exist");
+                return;
+            }
+
             if (writeToConsole)
                 Console.WriteLine("Writing DateTime");
 
-            using (var writer = new StreamWriter(fullFilePath.ToString(), true))
+            using (StreamWriter writer = fullFilePath.AppendText())
             {
                 var currentDateTime = DateTime.Now;
                 writer.WriteLine(currentDateTime);
